@@ -1,17 +1,13 @@
-package com.example.langchain4jlessons.services;
+package com.example.langchain4jlessons.services.file;
 
+import com.example.langchain4jlessons.services.astradb.AstraDBConnection;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.parser.apache.pdfbox.ApachePdfBoxDocumentParser;
-import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
-import jakarta.annotation.PostConstruct;
-import org.apache.pdfbox.pdmodel.PDDocument;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -20,11 +16,8 @@ import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.load
 @Service
 public class FileService {
 
-    private final EmbeddingStoreIngestor embeddingStoreIngestor;
-
-    public FileService(EmbeddingStoreIngestor embeddingStoreIngestor) {
-        this.embeddingStoreIngestor = embeddingStoreIngestor;
-    }
+    @Autowired
+    private AstraDBConnection astraDBConnection;
 
     public ResponseEntity<Object> storeFile(){
         try{
@@ -47,7 +40,7 @@ public class FileService {
     private void ingest() {
         Document document = loadDocument(toPath("regulamento.pdf"), new ApachePdfBoxDocumentParser());
         Document cleanedDocument = removeWhiteSpace(document);
-        embeddingStoreIngestor.ingest(cleanedDocument);
+        astraDBConnection.embeddingStoreIngestor().ingest(cleanedDocument);
     }
 
     private Document removeWhiteSpace(Document document) {
