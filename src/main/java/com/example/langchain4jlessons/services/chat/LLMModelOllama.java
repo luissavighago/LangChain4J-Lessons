@@ -2,13 +2,12 @@ package com.example.langchain4jlessons.services.chat;
 
 import com.example.langchain4jlessons.services.astradb.AstraDBConnection;
 import dev.langchain4j.chain.ConversationalRetrievalChain;
+import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.input.PromptTemplate;
-import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.retriever.EmbeddingStoreRetriever;
-import org.springframework.stereotype.Component;
 
-@Component
-public class LLMModelGPT implements LLMModel {
+public class LLMModelOllama implements LLMModel{
 
     private static final PromptTemplate DEFAULT_PROMPT_TEMPLATE = PromptTemplate.from("""
         Você responde perguntas sobre o regulamento de estágios de uma universidade.
@@ -28,7 +27,7 @@ public class LLMModelGPT implements LLMModel {
         AstraDBConnection astraDbConnection = new AstraDBConnection();
 
         return ConversationalRetrievalChain.builder()
-                .chatLanguageModel(OpenAiChatModel.withApiKey(System.getenv("GPT_TOKEN")))
+                .chatLanguageModel(getOllamaChatModel())
                 .retriever(EmbeddingStoreRetriever.from(astraDbConnection.astraDbEmbeddingStore(), astraDbConnection.embeddingModel(),4))
                 .promptTemplate(DEFAULT_PROMPT_TEMPLATE)
                 .build();
@@ -36,6 +35,14 @@ public class LLMModelGPT implements LLMModel {
 
     @Override
     public String testQuestion(String question) {
-        return null;
+        return getOllamaChatModel().generate(question);
+    }
+
+    private ChatLanguageModel getOllamaChatModel() {
+        return OllamaChatModel.builder()
+                .baseUrl("http://localhost:11434")
+                .modelName("llama2")
+                .temperature(0.8)
+                .build();
     }
 }

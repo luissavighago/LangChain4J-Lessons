@@ -19,6 +19,11 @@ public class ChatController {
 
     @PostMapping("/gpt")
     public ResponseEntity<Object> sendMessageGPT(@RequestBody @Valid ChatRecordDto chatRecordDto){
-        return chatService.sendMessageGPT(chatRecordDto);
+        return chatService.sendMessage(chatRecordDto, "GPT");
+    }
+
+    @PostMapping("/ollama")
+    public ResponseEntity<Object> sendMessage(@RequestBody @Valid ChatRecordDto chatRecordDto){
+        return chatService.testMessage(chatRecordDto, "OLLAMA");
     }
 }
