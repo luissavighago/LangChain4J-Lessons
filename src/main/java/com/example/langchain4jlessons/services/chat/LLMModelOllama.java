@@ -43,6 +43,8 @@ public class LLMModelOllama implements LLMModel{
                 .baseUrl("http://localhost:11434")
                 .modelName("llama2")
                 .temperature(0.8)
+                .format("json")
+                .maxRetries(1)
                 .build();
     }
 }

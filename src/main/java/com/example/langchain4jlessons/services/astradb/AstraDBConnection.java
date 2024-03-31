@@ -6,9 +6,7 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.cassandra.AstraDbEmbeddingConfiguration;
 import dev.langchain4j.store.embedding.cassandra.AstraDbEmbeddingStore;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 public class AstraDBConnection {

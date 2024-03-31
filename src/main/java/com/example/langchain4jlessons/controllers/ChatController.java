@@ -24,6 +24,11 @@ public class ChatController {
 
     @PostMapping("/ollama")
     public ResponseEntity<Object> sendMessage(@RequestBody @Valid ChatRecordDto chatRecordDto){
+        return chatService.sendMessage(chatRecordDto, "OLLAMA");
+    }
+
+    @PostMapping("/ollama/test")
+    public ResponseEntity<Object> testMessage(@RequestBody @Valid ChatRecordDto chatRecordDto){
         return chatService.testMessage(chatRecordDto, "OLLAMA");
     }
 }
